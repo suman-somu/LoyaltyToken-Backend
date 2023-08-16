@@ -78,6 +78,10 @@ const SellerSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
+  walletPublicAddress: {
+    type: String,
+    default: "",
+  },
 });
 
 module.exports = mongoose.model("Seller", SellerSchema);

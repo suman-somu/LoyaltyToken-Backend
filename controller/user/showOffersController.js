@@ -14,7 +14,7 @@ const showOffersController = async (req, res) => {
       allOffers.push(...sellerOffers);
     });
 
-    console.log(allOffers);
+    // console.log(allOffers);
 
     // Send the 'allOffers' array back to the client
     return res.status(200).json({ allOffers });

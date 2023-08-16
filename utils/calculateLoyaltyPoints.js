@@ -1,4 +1,4 @@
-import { pointsPerOrder, pointsPerPenny } from "../consts/consts";
+const { pointsPerOrder, pointsPerPenny } = require( "../consts/consts");
 
 
 function calculateLoyaltyPoints(noOfOrders, pennySpent) {

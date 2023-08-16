@@ -4,26 +4,28 @@ const User = require("../../models/userModel.js"); // Update the path
 const Seller = require("../../models/sellerModel.js"); // Update the path
 
 const signUp = async (req, res) => {
+  console.log("inside signup");
   try {
     const { name, email, password } = req.body;
 
     // Check if a user with the provided email already exists
-    const existingUser = await User.find({ email });
+    const existingUser = await User.findOne({ email });
+    console.log(existingUser);
     if (existingUser) {
-      return res.status(409).json-({ message: "already exists" });
+      return res.status(409).json({ message: "already exists" });
     }
-
     //check password for validity using regex
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
     if (!passwordRegex.test(password)) {
       return res.status(409).json({ message: "Invalid password" });
-      }
+    }
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    console.log("debug 4");
     // Create a new user
     const newUser = new User({
       name,
@@ -32,6 +34,7 @@ const signUp = async (req, res) => {
     });
 
     await newUser.save();
+
     return res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     if (error.code === 11000) {
@@ -48,7 +51,7 @@ const logIn = async (req, res) => {
   console.log("inside login");
   // console.log(req);
   try {
-    const { email, password } = req.body;
+    const { email, password, walletPublicAddress } = req.body;
 
     //if null or undefined return error
     if (!email || !password) {
@@ -64,6 +67,12 @@ const logIn = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    //check if wallet address is present
+    if (walletPublicAddress) {
+      user.walletPublicAddress = walletPublicAddress;
+      await user.save();
     }
 
     // Create and send a JWT token
@@ -96,14 +105,14 @@ const sellerSignUp = async (req, res) => {
         .status(409)
         .json({ message: "SEller with this email already exists" });
     }
-    
+
     //check password for validity using regex
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
     if (!passwordRegex.test(password)) {
       return res.status(409).json({ message: "Invalid password" });
-      }
+    }
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -128,7 +137,7 @@ const sellerLogIn = async (req, res) => {
   console.log("inside login");
   // console.log(req);
   try {
-    const { email, password } = req.body;
+    const { email, password, walletPublicAddress } = req.body;
 
     //if null or undefined return error
     if (!email || !password) {
@@ -144,6 +153,12 @@ const sellerLogIn = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, seller.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    //check if wallet address is present
+    if (walletPublicAddress) {
+      seller.walletPublicAddress = walletPublicAddress;
+      await seller.save();
     }
 
     return res.status(200).json({});

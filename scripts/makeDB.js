@@ -21,6 +21,24 @@ const addItemToSeller = async (email, newItem) => {
   }
 };
 
+const addOfferToSeller = async (email, newOffer) => {
+  try {
+    const seller = await Seller.findOne({ email });
+    if (!seller) {
+      console.log("Seller not found");
+      return;
+    }
+
+    seller.offers.push(newOffer);
+
+    await seller.save();
+
+    console.log("Offer added successfully");
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const addUser = async (nameofuser, email, password) => {
   try {
     // const user = await User.findOne({email});
@@ -96,19 +114,28 @@ connectDB();
 
 // const nameofuser = "user";
 // const email = "user@gmail.com";
-// const password = "12qw!@QW";
+// var password = "12qw!@QW";
 // addUser(nameofuser, email, password);
 
 // const nameofseller = "seller";
 // const selleremail = "seller@gmail.com";
-// const password = "12qw!@QW";
+// var password = "12qw!@QW";
 // addSeller(nameofseller, selleremail, password);
 
+const selleremail = "seller@gmail.com";
+const newItem = {
+  name: "google pixel 2",
+  category: "smartphone",
+  price: 500,
+  units: 10,
+};
+addItemToSeller(selleremail, newItem);
+
+
 // const selleremail = "seller@gmail.com";
-// const newItem = {
-//   name: "google pixel 3",
-//   category: "smartphone",
-//   price: 500,
-//   units: 10,
+// const newOffer = {
+//   details: "Buy 2 get 1 free",
+//   tokensRequired: 10,
+//   availedUsers: [],
 // };
-// addItemToSeller(selleremail, newItem);
+// addOfferToSeller(selleremail, newOffer);

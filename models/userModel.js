@@ -64,6 +64,10 @@ const UserSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
+  walletPublicAddress: {
+    type: String,
+    default: "",
+  },
 });
 
 module.exports = mongoose.model("User", UserSchema);

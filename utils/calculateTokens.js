@@ -1,4 +1,4 @@
-import { tokensPerLoyaltyPoint } from "../consts/consts";
+const { tokensPerLoyaltyPoint } = require( "../consts/consts");
 
 function calculateTokens(loyaltyPoints) {
     const tokens = loyaltyPoints * tokensPerLoyaltyPoint;
