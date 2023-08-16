@@ -19,4 +19,4 @@ const userSeller = async (req, res) => {
   }
 };
 
-module.exports = { userSeller };
+module.exports = userSeller

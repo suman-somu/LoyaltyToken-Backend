@@ -27,4 +27,4 @@ const sellerUser = async (req, res) => {
   }
 };
 
-module.exports = { sellerUser };
+module.exports = sellerUser

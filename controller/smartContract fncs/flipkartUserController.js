@@ -22,4 +22,4 @@ const flipkartUser = async (req, res) => {
   }
 };
 
-module.exports = { flipkartUser };
+module.exports = flipkartUser

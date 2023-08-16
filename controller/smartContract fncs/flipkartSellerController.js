@@ -24,4 +24,4 @@ const flipkartSeller = async (req, res) => {
   }
 };
 
-module.exports = { flipkartSeller };
+module.exports = flipkartSeller;
