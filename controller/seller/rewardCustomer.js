@@ -21,6 +21,8 @@ const rewardCustomer = async (req, res) => {
       // Save the updated seller document
       await seller.save();
 
+      //TODO: transfer tokens from seller to user
+
       console.log("User removed from loyal customers");
       return res.status(200).send("User removed from loyal customers");
     } else {

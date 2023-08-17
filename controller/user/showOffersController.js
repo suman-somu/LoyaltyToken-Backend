@@ -2,6 +2,8 @@ const Seller = require("../../models/sellerModel");
 
 const showOffersController = async (req, res) => {
   try {
+    const {useremail} = req.headers;
+    console.log(useremail);
     // Fetch all seller documents from the database
     const sellers = await Seller.find();
 
@@ -11,10 +13,12 @@ const showOffersController = async (req, res) => {
     // Loop through each seller and extract their 'offers' array
     sellers.forEach((seller) => {
       const sellerOffers = seller.offers || [];
-      allOffers.push(...sellerOffers);
+      sellerOffers.forEach((offer) => {
+        if (!offer.availedUsers.includes(useremail)) {
+          allOffers.push(offer);
+        }
+      });
     });
-
-    // console.log(allOffers);
 
     // Send the 'allOffers' array back to the client
     return res.status(200).json({ allOffers });
