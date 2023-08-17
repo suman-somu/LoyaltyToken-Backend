@@ -120,7 +120,7 @@ connectDB();
 // const nameofseller = "seller";
 // const selleremail = "seller@gmail.com";
 // var password = "12qw!@QW";
-// addSeller(nameofseller, selleremail, password);
+//  addSeller(nameofseller, selleremail, password);
 
 const selleremail = "seller@gmail.com";
 const newItem = {
@@ -133,9 +133,9 @@ addItemToSeller(selleremail, newItem);
 
 
 // const selleremail = "seller@gmail.com";
-// const newOffer = {
-//   details: "Buy 2 get 1 free",
-//   tokensRequired: 10,
-//   availedUsers: [],
-// };
-// addOfferToSeller(selleremail, newOffer);
+const newOffer = {
+  details: "Buy 2 get 1 free",
+  tokensRequired: 10,
+  availedUsers: [],
+};
+addOfferToSeller(selleremail, newOffer);

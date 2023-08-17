@@ -10,17 +10,6 @@ const userByService = async (req, res) => {
     console.log("inside userByService");
     const { userEmail, itemID } = req.body;
 
-    console.log("userEmail: ", userEmail);
-    console.log("itemID: ", itemID);
-
-
-
-    //update user and seller db
-    //update user db - update recentOrder field 
-    //requirement- userEmail, no of orders and penny spent
-    //penny spent can be calculated from quering itemID from seller db 
-    //no of orders is always = 1
-
 
     // Fetch the seller's item details using itemID
     const sellerItem = await Seller.findOne({ 'items._id': itemID }, { 'items.$': 1 });
@@ -34,7 +23,6 @@ const userByService = async (req, res) => {
 
     // Update user's recentOrder field
 
-    console.log("debug 1")
 
     const noOfProducts = 1;
     await User.updateOne(
@@ -48,9 +36,6 @@ const userByService = async (req, res) => {
         },
       }
     );
-
-    console.log("debug 2")
-
 
      //upadte seller db - update recentItem field
     //requirement - name, category, price units
@@ -74,14 +59,14 @@ const userByService = async (req, res) => {
     );
     
 
-    console.log("debug 3")
 
     // Call flipkartUser function
-    flipkartUser();
+    // flipkartUser();
 
     // Call flipkartSeller function
-    flipkartSeller();
+    // flipkartSeller();
     
+    console.log("successful updated db")
     return res.status(200).json({ message: 'User and seller data updated successfully' });
   } catch (error) {
     console.error(error);

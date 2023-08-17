@@ -82,7 +82,7 @@ const logIn = async (req, res) => {
 
     return res
       .status(200)
-      .json({ nameofuser: user.nameofuser, email: user.email, token });
+      .json({ name: user.name, email, token });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
@@ -161,7 +161,7 @@ const sellerLogIn = async (req, res) => {
       await seller.save();
     }
 
-    return res.status(200).json({});
+    return res.status(200).json({name: seller.name, email: seller.email});
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
