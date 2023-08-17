@@ -14,7 +14,7 @@ const sellerGetItems = async (req, res) => {
         }
 
         //return the items of the seller
-        console.log(seller.items)
+        console.log("got seller items")
         res.status(200).json({ items: seller.items })
 
     }

@@ -9,6 +9,7 @@ const {getBalance, getSellerBalance} = require("../controller/smartContract fncs
 const getLoyalCustomers = require("../controller/seller/getLoyalCustomers.js");
 const rewardCustomer = require("../controller/seller/rewardCustomer.js");
 const sellerGetItems = require("../controller/seller/getItems.js");
+const tokenRules = require("../controller/user/tokenRules.js");
 
 const {
   signUp,
@@ -35,5 +36,6 @@ router.get("/seller/getTokenBalance", getSellerBalance)
 router.get("/seller/getLoyalCustomers", getLoyalCustomers)
 router.post("/seller/rewardCustomer", rewardCustomer)
 router.get("/seller/getItems", sellerGetItems)
+router.get("/tokenrules", tokenRules)
 
 module.exports = router;
