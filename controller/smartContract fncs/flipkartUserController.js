@@ -1,24 +1,35 @@
 const { calculateLoyaltyPoints } = require('../../utils/calculateLoyaltyPoints');
 const { calculateTokens } = require('../../utils/calculateTokens');
 const { flipkartUserTransfer } = require('../../service/smartContractService');
+const User = require('../../models/userModel.js');
 
-const flipkartUser = async (req, res) => {
+const flipkartUser = async (userEmail, pennySpent, noOfProducts) => {
   try {
     console.log("from flipkartUser function");
 
-    const userAddress = ''; // Replace with actual user address
-    const noOfOrders = 10;
-    const pennySpent = 1000;
+    const user = await User.findOne({ email: userEmail });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const walletAddress = user.walletPublicAddress;
+
+    console.log("walletAddress: ", walletAddress);
     
-    const loyaltyPoints = calculateLoyaltyPoints(noOfOrders, pennySpent);
-    const tokens = calculateTokens(loyaltyPoints);
+    const loyaltyPoints = calculateLoyaltyPoints(noOfProducts, pennySpent);
+    var tokens = calculateTokens(loyaltyPoints);
+    tokens = Math.floor(tokens);
+
+    console.log("tokens: ", tokens);
+
+    // const walletAddress = '0xaF0f983378773CC5a53914e28395666f198eB4EF'
+    // const tokens = 100;
     
-    await flipkartUserTransfer(userAddress, tokens);
+    await flipkartUserTransfer(walletAddress, tokens);
     
-    res.send("Transaction successful");
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).send("An error occurred");
   }
 };
 

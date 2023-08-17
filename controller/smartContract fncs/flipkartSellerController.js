@@ -2,25 +2,19 @@ const { flipkartSellerTransfer } = require('../../service/smartContractService')
 const { calculateTokens } = require('../../utils/calculateTokens');
 
 
-const flipkartSeller = async (req, res) => {
+const flipkartSeller = async (sellerAddress) => {
   try {
     console.log("from flipkartSeller function");
 
-    const sellerAddress = ''; // Replace with actual seller address
-
-    // Define rules of seller loyalty based on some parameters
-    
-
-    //see the product sold and calculate the loyalty points
-    const loyaltyPoints = 1000;
-    const tokens = calculateTokens(loyaltyPoints); // You need to define the `calculateTokens` function
+    //TODO: logic for loyalty points for each sold product
+    //currenyly it's 1000 points for each sold product
+    const loyaltyPoints = 2000;
+    const tokens = calculateTokens(loyaltyPoints);
 
     await flipkartSellerTransfer(sellerAddress, tokens);
 
-    res.send("Transaction successful");
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).send("An error occurred");
   }
 };
 

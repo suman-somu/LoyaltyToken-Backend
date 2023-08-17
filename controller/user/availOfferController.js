@@ -1,13 +1,16 @@
 const User = require("../../models/userModel");
 const Seller = require("../../models/sellerModel");
 const UserSellerTransfer = require("../smartContract fncs/userSellerController.js");
+const mongoose = require("mongoose");
+// const ObjectId = mongoose.Types.ObjectId;
 
 const availOfferController = async (req, res) => {
-  console.log("intitiating avail offer controller")
+  console.log("intitiating avail offer controller");
   try {
     const { userEmail, offerId } = req.body;
 
     const user = await User.findOne({ email: userEmail });
+    const seller = await Seller.findOne({ "offers._id": offerId });
     if (!user) {
       return res.status(400).send("User not found");
     }
@@ -16,7 +19,6 @@ const availOfferController = async (req, res) => {
     user.availedOffers.push(offerId);
 
     //update db - seller offers
-    const seller = await Seller.findOne({ "offers._id": offerId });
     if (!seller) {
       return res.status(400).send("Seller not found");
     }
@@ -26,8 +28,9 @@ const availOfferController = async (req, res) => {
     }
     offerToUpdate.availedUsers.push(userEmail);
 
-    console.log("db updated")
-    //transfer tokens from user to seller
+    // console.log(user)
+    // console.log(seller)
+
     await UserSellerTransfer(
       user.walletPublicAddress,
       seller.walletPublicAddress,

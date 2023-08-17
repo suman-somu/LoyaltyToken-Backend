@@ -10,7 +10,6 @@ const signUp = async (req, res) => {
 
     // Check if a user with the provided email already exists
     const existingUser = await User.findOne({ email });
-    console.log(existingUser);
     if (existingUser) {
       return res.status(409).json({ message: "already exists" });
     }
@@ -25,7 +24,6 @@ const signUp = async (req, res) => {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    console.log("debug 4");
     // Create a new user
     const newUser = new User({
       name,
@@ -35,6 +33,7 @@ const signUp = async (req, res) => {
 
     await newUser.save();
 
+    console.log("successful")
     return res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     if (error.code === 11000) {
@@ -80,6 +79,7 @@ const logIn = async (req, res) => {
       expiresIn: "1h",
     });
 
+    console.log("successful")
     return res
       .status(200)
       .json({ name: user.name, email, token });
@@ -95,6 +95,7 @@ const logOut = (req, res) => {
 };
 
 const sellerSignUp = async (req, res) => {
+  console.log("seller signup")
   try {
     const { name, email, password } = req.body;
 
@@ -126,6 +127,7 @@ const sellerSignUp = async (req, res) => {
 
     await newSeller.save();
 
+    console.log("successful")
     return res.status(201).json({ message: "Seller registered successfully" });
   } catch (error) {
     console.error(error);
@@ -161,6 +163,7 @@ const sellerLogIn = async (req, res) => {
       await seller.save();
     }
 
+    console.log("successful")
     return res.status(200).json({name: seller.name, email: seller.email});
   } catch (error) {
     console.error(error);

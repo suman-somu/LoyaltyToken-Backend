@@ -1,11 +1,13 @@
 const Seller = require("../../models/sellerModel");
+const User = require("../../models/userModel");
+const { SellerUserTransfer } = require("../../service/smartContractService");
 
 const rewardCustomer = async (req, res) => {
     console.log("removing user from seller's loyal customers list")
   try {
     const { userEmail, sellerEmail } = req.body;
 
-
+    const user = await User.findOne({ email: userEmail });
 
     const seller = await Seller.findOne({ email: sellerEmail });
     if (!seller) {
@@ -22,6 +24,14 @@ const rewardCustomer = async (req, res) => {
       await seller.save();
 
       //TODO: transfer tokens from seller to user
+
+      //print wallet address
+      console.log("seller wallet address: ", seller.walletPublicAddress);
+      console.log("user wallet address: ", user.walletPublicAddress);
+
+      console.log("tranfering")
+      await SellerUserTransfer(seller.walletPublicAddress, user.walletPublicAddress, 10);
+      console.log("tranfered")
 
       console.log("User removed from loyal customers");
       return res.status(200).send("User removed from loyal customers");

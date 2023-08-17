@@ -1,28 +1,26 @@
-const { flipkartUser } = require('../smartContract fncs/flipkartUserController.js');
-const { flipkartSeller } = require('../smartContract fncs/flipkartSellerController.js');
-const { sellerUser } = require('../smartContract fncs/sellerUserController.js');
-const User = require('../../models/userModel.js'); // Import your User model
-const Seller = require('../../models/sellerModel.js'); // Import your Seller model
+const flipkartUser = require("../smartContract fncs/flipkartUserController.js");
+const flipkartSeller = require("../smartContract fncs/flipkartSellerController.js");
+const User = require("../../models/userModel.js"); // Import your User model
+const Seller = require("../../models/sellerModel.js"); // Import your Seller model
 
 const userByService = async (req, res) => {
   try {
-
     console.log("inside userByService");
     const { userEmail, itemID } = req.body;
 
 
-    // Fetch the seller's item details using itemID
-    const sellerItem = await Seller.findOne({ 'items._id': itemID }, { 'items.$': 1 });
+    const sellerItems = await Seller.findOne(
+      { "items._id": itemID },
+      { "items.$": 1 }
+    );
+    const seller = await Seller.findOne(
+      { "items._id": itemID })
 
-    if (!sellerItem) {
-      return res.status(404).json({ message: 'Item not found' });
-    }
 
     // Calculate the penny spent from the fetched sellerItem
-    const pennySpent = sellerItem.items[0].price;
+    const pennySpent = sellerItems.items[0].price;
 
     // Update user's recentOrder field
-
 
     const noOfProducts = 1;
     await User.updateOne(
@@ -31,46 +29,42 @@ const userByService = async (req, res) => {
         $set: {
           recentOrder: {
             noOfProducts: noOfProducts,
-            pennySpent: pennySpent*noOfProducts,
+            pennySpent: pennySpent * noOfProducts,
           },
         },
       }
     );
 
-     //upadte seller db - update recentItem field
-    //requirement - name, category, price units
-    //
-
     // Update seller's recentItem field
     await Seller.updateOne(
-      { 'items._id': itemID },
+      { "items._id": itemID },
       {
         $set: {
           recentItem: {
             userEmail: userEmail,
             itemID: itemID,
             noOfProducts: noOfProducts,
-          }
+          },
         },
         $push: {
           loyalUsers: userEmail,
         },
       }
     );
-    
-
 
     // Call flipkartUser function
-    // flipkartUser();
+    await flipkartUser(userEmail, pennySpent, noOfProducts);
 
     // Call flipkartSeller function
-    // flipkartSeller();
-    
-    console.log("successful updated db")
-    return res.status(200).json({ message: 'User and seller data updated successfully' });
+    await flipkartSeller(seller.walletPublicAddress);
+
+    console.log("successful updated db");
+    return res
+      .status(200)
+      .json({ message: "User and seller data updated successfully" });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
